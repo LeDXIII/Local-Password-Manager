@@ -27,6 +27,9 @@
 - **Сворачивание в трей** - программа сворачивается в системный трей при нажатии крестика или кнопки "Свернуть в трей"
 - **Контекстное меню** - правый клик по окну показывает меню с пунктами "Открыть" и "Выход"
 
+![screen](https://github.com/user-attachments/assets/bf0d3366-8bd4-43fb-b70b-140e773e0298)
+
+
 ## Установка
 
 ### Требования
@@ -119,6 +122,10 @@ A simple and convenient password management program with the ability to store da
 ### 🖥️ Interface
 - **System tray minimization** - the program minimizes to the system tray when clicking the close button or "Minimize to Tray" button
 - **Context menu** - right-click on the window shows a menu with "Open" and "Exit" options
+
+![screen](https://github.com/user-attachments/assets/bb7be654-0394-45dd-93cb-c5f96f8863f5)
+
+
 
 ## Installation
 
