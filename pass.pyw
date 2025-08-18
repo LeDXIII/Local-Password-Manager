@@ -31,6 +31,7 @@ class PasswordManager:
         self.default_file = "Password.xlsx"
         self.work_file = "Работа.xlsx"
         self.data = []
+        self.current_data = []  # Для хранения текущих данных (с учетом поиска)
         
         self.create_widgets()
         self.load_default_file()
@@ -150,6 +151,7 @@ class PasswordManager:
         if os.path.exists(self.default_file):
             self.load_data_from_file(self.default_file)
             self.file_label.config(text=f"Файл: {self.default_file}")
+            self.search_var.set("")  # Очищаем поле поиска
         else:
             messagebox.showwarning("Файл не найден", f"Файл {self.default_file} не найден в папке программы.")
     
@@ -158,8 +160,39 @@ class PasswordManager:
         if os.path.exists(self.work_file):
             self.load_data_from_file(self.work_file)
             self.file_label.config(text=f"Файл: {self.work_file}")
+            self.search_var.set("")  # Очищаем поле поиска
         else:
             messagebox.showwarning("Файл не найден", f"Файл {self.work_file} не найден в папке программы.")
+    
+    def search_data(self, event=None):
+        """Поиск по всем полям"""
+        search_term = self.search_var.get().lower().strip()
+        
+        # Очищаем таблицу
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+        
+        # Если строка поиска пуста, показываем все данные
+        if not search_term:
+            data_to_show = self.current_data
+        else:
+            # Фильтруем данные по всем полям
+            data_to_show = []
+            for row in self.current_data:
+                # Проверяем все поля на наличие поискового термина
+                if any(search_term in str(field).lower() for field in row):
+                    data_to_show.append(row)
+        
+        # Заполняем таблицу отфильтрованными данными
+        for index, row in enumerate(data_to_show):
+            # Чередование цветов строк (контрастные цвета)
+            tag = 'evenrow' if index % 2 == 0 else 'oddrow'
+            self.tree.insert("", tk.END, values=row, tags=(tag,))
+    
+    def clear_search(self):
+        """Очистить поле поиска"""
+        self.search_var.set("")
+        self.search_data()
     
     def create_widgets(self):
         # Кнопка загрузки файла
@@ -194,6 +227,28 @@ class PasswordManager:
                                   bg="#9C27B0", fg="white", font=("Arial", 10, "bold"),
                                   relief="flat", padx=10, pady=5)
         minimize_button.pack(side=tk.RIGHT, padx=5)
+        
+        # Поле поиска
+        search_frame = tk.Frame(self.root, bg="#f0f0f0")
+        search_frame.pack(pady=5, fill=tk.X, padx=10)
+        
+        tk.Label(search_frame, text="Поиск:", font=("Arial", 10), bg="#f0f0f0").pack(side=tk.LEFT, padx=(0, 5))
+        
+        self.search_var = tk.StringVar()
+        self.search_entry = tk.Entry(search_frame, textvariable=self.search_var, font=("Arial", 10), width=30)
+        self.search_entry.pack(side=tk.LEFT, padx=5)
+        
+        # Кнопка поиска
+        search_button = tk.Button(search_frame, text="Поиск", command=self.search_data,
+                                bg="#2196F3", fg="white", font=("Arial", 9),
+                                relief="flat", padx=10, pady=2)
+        search_button.pack(side=tk.LEFT, padx=2)
+        
+        # Кнопка очистки поиска
+        clear_search_button = tk.Button(search_frame, text="Очистить", command=self.clear_search,
+                                      bg="#f44336", fg="white", font=("Arial", 9),
+                                      relief="flat", padx=10, pady=2)
+        clear_search_button.pack(side=tk.LEFT, padx=5)
         
         # Таблица с паролями
         table_frame = tk.Frame(self.root, relief="solid", bd=1)
@@ -261,6 +316,9 @@ class PasswordManager:
         # Привязываем событие клика
         self.tree.bind("<Button-1>", self.on_cell_click)
         self.tree.bind("<Double-1>", self.on_cell_click)
+        
+        # Привязываем Enter к полю поиска
+        self.search_entry.bind("<Return>", self.search_data)
     
     def load_default_file(self):
         """Загрузка файла по умолчанию при запуске"""
@@ -281,6 +339,7 @@ class PasswordManager:
         if file_path:
             self.load_data_from_file(file_path)
             self.file_label.config(text=f"Файл: {os.path.basename(file_path)}")
+            self.search_var.set("")  # Очищаем поле поиска
     
     def load_data_from_file(self, file_path):
         """Загрузка данных из Excel файла"""
@@ -292,11 +351,8 @@ class PasswordManager:
             while len(df.columns) < 4:
                 df[f"Столбец_{len(df.columns)+1}"] = ""
             
-            # Очищаем таблицу
-            for item in self.tree.get_children():
-                self.tree.delete(item)
-            
-            # Заполняем таблицу данными с чередованием цветов строк
+            # Сохраняем текущие данные для поиска
+            self.current_data = []
             for index, row in df.iterrows():
                 values = (
                     str(row.iloc[0]) if not pd.isna(row.iloc[0]) else "",
@@ -304,10 +360,17 @@ class PasswordManager:
                     str(row.iloc[2]) if not pd.isna(row.iloc[2]) else "",
                     str(row.iloc[3]) if not pd.isna(row.iloc[3]) else ""
                 )
-                
+                self.current_data.append(values)
+            
+            # Очищаем таблицу
+            for item in self.tree.get_children():
+                self.tree.delete(item)
+            
+            # Заполняем таблицу данными с чередованием цветов строк
+            for index, row in enumerate(self.current_data):
                 # Чередование цветов строк (контрастные цвета)
                 tag = 'evenrow' if index % 2 == 0 else 'oddrow'
-                self.tree.insert("", tk.END, values=values, tags=(tag,))
+                self.tree.insert("", tk.END, values=row, tags=(tag,))
                 
         except Exception as e:
             messagebox.showerror("Ошибка", f"Не удалось загрузить файл:\n{str(e)}")
