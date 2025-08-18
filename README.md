@@ -24,6 +24,7 @@
 - **Чтение первых 4 колонок** - программа использует только первые 4 столбца Excel-файла, остальные игнорируются
 
 ### 🖥️ Интерфейс
+- **Поиск** - реализован поиск по всем полям - для удобной фильтрации данных. 
 - **Сворачивание в трей** - программа сворачивается в системный трей при нажатии крестика или кнопки "Свернуть в трей"
 - **Контекстное меню** - правый клик по окну показывает меню с пунктами "Открыть" и "Выход"
 
@@ -62,8 +63,8 @@ pip install pandas openpyxl pyperclip pillow pystray
    - Скопированный текст будет показан в уведомлении
 3. **Сворачивание**:
    - Нажмите крестик или кнопку "Свернуть в трей" для сворачивания в системный трей
-   - Правый клик по окну → "Открыть" для восстановления
-   - Правый клик по окну → "Выход" для закрытия программы
+   - Правый клик по иконке → "Открыть" для восстановления
+   - Правый клик по иконке → "Выход" для закрытия программы
 
 ### Формат Excel-файла
 Файл должен содержать как минимум 4 столбца:
@@ -84,7 +85,7 @@ pip install pandas openpyxl pyperclip pillow pystray
 - 🛡️ **Безопасность** - данные хранятся локально в Excel-файлах, никакой пересылки в сеть
 - 🚀 **Простота** - интуитивный интерфейс без лишних функций
 - 🎨 **Удобство** - контрастная таблица и визуальные разделители
-- 📱 **Доступность** - быстрый доступ к часто используемым файлам
+- 📱 **Доступность** - быстрый доступ к часто используемым файлам, поиск по всем полям
 - 🖱️ **Эргономика** - копирование одним кликом
 
 ## Примечания
@@ -120,6 +121,7 @@ A simple and convenient password management program with the ability to store da
 - **Reading first 4 columns** - the program uses only the first 4 columns of the Excel file, the rest are ignored
 
 ### 🖥️ Interface
+- **Search** - search by all fields - for convenient data filtering.
 - **System tray minimization** - the program minimizes to the system tray when clicking the close button or "Minimize to Tray" button
 - **Context menu** - right-click on the window shows a menu with "Open" and "Exit" options
 
@@ -159,8 +161,8 @@ pip install pandas openpyxl pyperclip pillow pystray
    - The copied text will be shown in the notification
 3. **Minimization**:
    - Click the close button or "Minimize to Tray" button to minimize to the system tray
-   - Right-click on window → "Open" to restore
-   - Right-click on window → "Exit" to close the program
+   - Right-click on tray → "Open" to restore
+   - Right-click on tray → "Exit" to close the program
 
 ### Excel File Format
 The file must contain at least 4 columns:
@@ -181,7 +183,7 @@ Example structure:
 - 🛡️ **Security** - data is stored locally in Excel files, no network transmission
 - 🚀 **Simplicity** - intuitive interface without unnecessary functions
 - 🎨 **Convenience** - high-contrast table and visual separators
-- 📱 **Accessibility** - quick access to frequently used files
+- 📱 **Accessibility** - quick access to frequently used files, search by all fields
 - 🖱️ **Ergonomics** - one-click copying
 
 ## Notes
